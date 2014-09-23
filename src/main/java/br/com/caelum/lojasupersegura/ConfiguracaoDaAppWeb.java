@@ -8,7 +8,7 @@ public class ConfiguracaoDaAppWeb extends AbstractAnnotationConfigDispatcherServ
 	
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { };
+		return new Class[] { ConfiguracaoSeguranca.class };
 	}
 
 	@Override

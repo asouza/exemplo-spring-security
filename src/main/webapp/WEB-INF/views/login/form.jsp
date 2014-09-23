@@ -6,6 +6,8 @@
 <body onload='document.f.username.focus();'>
 	<h3>Login with Username and Passworddd</h3>
 	<form name='f' action='/loja-super-segura/login' method='POST'>
+		<input type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}" />
 		<table>
 			<tr>
 				<td>User:</td>

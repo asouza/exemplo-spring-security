@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/dash")
 public class DashBoardController {
+	
+	@RequestMapping("/index")
+	public String index(){
+		return "dash/index";
+	}
 
 	@RequestMapping("/ultimas-compras")
 	public String ultimasCompras(){

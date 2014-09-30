@@ -6,6 +6,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import br.com.caelum.lojasupersegura.handlers.CustomAccessDeniedHandler;
+import br.com.caelum.lojasupersegura.handlers.CustomLogoutSuccessHandler;
+import br.com.caelum.lojasupersegura.handlers.CustomSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -24,18 +32,28 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 			throws Exception {
 		auth.inMemoryAuthentication().withUser("user").password("password")
 				.roles("USER").and().withUser("dash").password("password")
-				.roles("ADMIN");
+				.roles("ADMIN").and().withUser("deus").password("password")
+				.roles("ADMIN", "DEUS");
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		//a configuração tem que ser toda junta, para ele mexer no mesmo objeto.
+		AuthenticationSuccessHandler postAuthHandler = new CustomSuccessHandler();
+		LogoutSuccessHandler logoutSuccessHandler = new CustomLogoutSuccessHandler();
+		AccessDeniedHandler accessDeniedHandler = new CustomAccessDeniedHandler();
+		// a configuração tem que ser toda junta, para ele mexer no mesmo
+		// objeto.
 		http.authorizeRequests().antMatchers("/").permitAll()
 				.antMatchers("/dash/**").hasRole("ADMIN")
 				.antMatchers("/carrinho/index")
-				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')").anyRequest()
-				.authenticated().and().formLogin().loginPage("/login");
-//				.permitAll().successHandler(postAuth);
+				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+				.anyRequest().authenticated().and().formLogin()
+				.loginPage("/login").permitAll()
+				.successHandler(postAuthHandler)
+				.failureUrl("/login?msg=nao_logado").and().logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout22"))
+				.logoutSuccessHandler(logoutSuccessHandler).and()
+				.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
 
 	}
 

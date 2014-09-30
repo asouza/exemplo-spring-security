@@ -23,13 +23,20 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 	public void configureGlobal(AuthenticationManagerBuilder auth)
 			throws Exception {
 		auth.inMemoryAuthentication().withUser("user").password("password")
-				.roles("USER");
+				.roles("USER").and().withUser("dash").password("password")
+				.roles("ADMIN");
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().authenticated().and().formLogin()
-				.loginPage("/login").permitAll();
+		//a configuração tem que ser toda junta, para ele mexer no mesmo objeto.
+		http.authorizeRequests().antMatchers("/").permitAll()
+				.antMatchers("/dash/**").hasRole("ADMIN")
+				.antMatchers("/carrinho/index")
+				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')").anyRequest()
+				.authenticated().and().formLogin().loginPage("/login");
+//				.permitAll().successHandler(postAuth);
+
 	}
 
 }

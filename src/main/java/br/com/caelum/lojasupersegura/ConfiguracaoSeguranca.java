@@ -21,7 +21,7 @@ import br.com.caelum.lojasupersegura.handlers.CustomSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackages={"br.com.caelum.lojasupersegura"})
+@ComponentScan(basePackages = { "br.com.caelum.lojasupersegura" })
 public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 	/*
 	 * GET /login renders the login page instead of /spring_security_login
@@ -35,10 +35,10 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth)
 			throws Exception {
-//		auth.inMemoryAuthentication().withUser("user").password("password")
-//				.roles("USER").and().withUser("dash").password("password")
-//				.roles("ADMIN").and().withUser("deus").password("password")
-//				.roles("ADMIN", "DEUS");
+		// auth.inMemoryAuthentication().withUser("user").password("password")
+		// .roles("USER").and().withUser("dash").password("password")
+		// .roles("ADMIN").and().withUser("deus").password("password")
+		// .roles("ADMIN", "DEUS");
 	}
 
 	@Override
@@ -58,20 +58,22 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 				.failureUrl("/login?msg=nao_logado").and().logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout22"))
 				.logoutSuccessHandler(logoutSuccessHandler).and()
-				.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+				.exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+				.and().rememberMe().tokenValiditySeconds(60);
 
 	}
-	
+
 	@Autowired
 	private UserDetailsService users;
-	
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth)
 			throws Exception {
-		auth.userDetailsService(users).passwordEncoder(new BCryptPasswordEncoder(16));
-		//super.configure(auth);
+		auth.userDetailsService(users).passwordEncoder(
+				new BCryptPasswordEncoder(16));
+		// super.configure(auth);
 	}
-	
+
 	public static void main(String[] args) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
 		String result = encoder.encode("password");

@@ -12,6 +12,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import br.com.caelum.lojasupersegura.models.Role;
+
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
 	@Override
@@ -19,9 +21,10 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 			HttpServletResponse response, Authentication auth) throws IOException,
 			ServletException {
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-		GrantedAuthorityImpl permissaoUsuario = new GrantedAuthorityImpl("ROLE_USER");
-		GrantedAuthorityImpl permissaoAdmin = new GrantedAuthorityImpl("ROLE_ADMIN");
+		Role permissaoUsuario = new Role("ROLE_USER");
+		Role permissaoAdmin = new Role("ROLE_ADMIN");
 		String contexto = "/loja-super-segura";
+		System.out.println(authorities);
 		if(authorities.contains(permissaoAdmin)){
 			response.sendRedirect(contexto+"/dash/index");
 			return ;

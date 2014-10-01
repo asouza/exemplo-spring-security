@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import br.com.caelum.lojasupersegura.models.User;
 
-@Repository
+@Repository("userDAO")
 public class UserDAO implements UserDetailsService{
 	
 	@PersistenceContext
@@ -21,6 +21,7 @@ public class UserDAO implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
+		System.out.println("Tentando logar com "+username);
 		String jpql = "select u from User u where u.login = :login";
 		List<User> users = em.createQuery(jpql,User.class).setParameter("login", username).getResultList();
 		if(users.isEmpty()){

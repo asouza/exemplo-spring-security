@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
@@ -18,11 +19,11 @@ public class User implements UserDetails{
 	private String login;
 	private String password;
 	private String name;
-	@ManyToMany
-	private List<Group> groups = new ArrayList<>();
+	@ManyToMany(fetch=FetchType.EAGER)
+	private List<Role> roles = new ArrayList<>();
 	
-	public void add(Group group){
-		this.groups.add(group);
+	public void add(Role group){
+		this.roles.add(group);
 	}
 	
 	public void setLogin(String login) {
@@ -43,7 +44,7 @@ public class User implements UserDetails{
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return groups;
+		return roles;
 	}
 
 	@Override

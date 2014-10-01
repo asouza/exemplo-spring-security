@@ -1,11 +1,15 @@
 package br.com.caelum.lojasupersegura;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -17,6 +21,7 @@ import br.com.caelum.lojasupersegura.handlers.CustomSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
+@ComponentScan(basePackages={"br.com.caelum.lojasupersegura"})
 public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 	/*
 	 * GET /login renders the login page instead of /spring_security_login
@@ -30,10 +35,10 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth)
 			throws Exception {
-		auth.inMemoryAuthentication().withUser("user").password("password")
-				.roles("USER").and().withUser("dash").password("password")
-				.roles("ADMIN").and().withUser("deus").password("password")
-				.roles("ADMIN", "DEUS");
+//		auth.inMemoryAuthentication().withUser("user").password("password")
+//				.roles("USER").and().withUser("dash").password("password")
+//				.roles("ADMIN").and().withUser("deus").password("password")
+//				.roles("ADMIN", "DEUS");
 	}
 
 	@Override
@@ -55,6 +60,22 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 				.logoutSuccessHandler(logoutSuccessHandler).and()
 				.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
 
+	}
+	
+	@Autowired
+	private UserDetailsService users;
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth)
+			throws Exception {
+		auth.userDetailsService(users).passwordEncoder(new BCryptPasswordEncoder(16));
+		//super.configure(auth);
+	}
+	
+	public static void main(String[] args) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+		String result = encoder.encode("password");
+		System.out.println(result);
 	}
 
 }

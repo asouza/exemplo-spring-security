@@ -1,5 +1,7 @@
 package br.com.caelum.lojasupersegura;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,14 +83,17 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService users;
 	@Autowired
-	private AuthenticationProvider authenticationProvider;
+	private List<AuthenticationProvider> authenticationProviders;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth)
 			throws Exception {
 //		auth.userDetailsService(users).passwordEncoder(
 //				new BCryptPasswordEncoder(16));
-		auth.authenticationProvider(authenticationProvider);
+		for(AuthenticationProvider provider : authenticationProviders){
+			System.out.println("adicionando o provider");
+			auth.authenticationProvider(provider);
+		}
 		// super.configure(auth);
 	}
 

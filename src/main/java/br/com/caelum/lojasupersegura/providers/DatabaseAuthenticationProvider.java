@@ -1,4 +1,4 @@
-package br.com.caelum.lojasupersegura;
+package br.com.caelum.lojasupersegura.providers;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,11 +12,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import br.com.caelum.lojasupersegura.models.User;
 
 @Component
-public class CustomAuthProvider implements AuthenticationProvider{
+public class DatabaseAuthenticationProvider implements AuthenticationProvider{
 	
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -27,9 +28,9 @@ public class CustomAuthProvider implements AuthenticationProvider{
 	@Override
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
+		System.out.println("autenticando os clientes regulares");
 		String login = authentication.getName();
 		String password = authentication.getCredentials().toString();
-		System.out.println(request.getParameter("unidade"));
 		
 		User user = (User) userDetailsService.loadUserByUsername(login);
 				
@@ -48,7 +49,7 @@ public class CustomAuthProvider implements AuthenticationProvider{
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return true;
+		return StringUtils.isEmpty(request.getParameter("funcionario"));
 	}
 
 }

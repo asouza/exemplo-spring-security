@@ -19,8 +19,8 @@
 			</tr>
 			
 			<tr>
-				<td>Estado:</td>
-				<td><input type='text' name='unidade' /></td>
+				<td>Funcionario ?:</td>
+				<td><input type='checkbox' value="true" name='funcionario' /></td>
 			</tr>
 			<tr>
 				<td>Remember me</td>

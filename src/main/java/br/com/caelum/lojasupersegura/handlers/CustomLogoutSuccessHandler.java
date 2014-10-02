@@ -15,7 +15,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 	public void onLogoutSuccess(HttpServletRequest request,
 			HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
-		System.out.println("kdjslkjhdflk");
 		response.sendRedirect("/loja-super-segura/login?msg=deslogado");
 	}
 

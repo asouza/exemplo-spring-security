@@ -28,7 +28,6 @@ public class DatabaseAuthenticationProvider implements AuthenticationProvider{
 	@Override
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
-		System.out.println("autenticando os clientes regulares");
 		String login = authentication.getName();
 		String password = authentication.getCredentials().toString();
 		
@@ -39,7 +38,6 @@ public class DatabaseAuthenticationProvider implements AuthenticationProvider{
             throw new BadCredentialsException("usuario nao encontrado");
         }
  
-		System.out.println(user.getPassword());
         if (!encoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Wrong password.");
         }

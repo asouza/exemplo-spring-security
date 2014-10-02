@@ -23,14 +23,21 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		Role permissaoUsuario = new Role("ROLE_USER");
 		Role permissaoAdmin = new Role("ROLE_ADMIN");
+		Role permissaoDev = new Role("ROLE_DEV");
+		Role permissaoDiretor = new Role("ROLE_DIRETOR");
+		Role permissaoDeus = new Role("ROLE_DEUS");
 		String contexto = "/loja-super-segura";
-		System.out.println(authorities);
 		if(authorities.contains(permissaoAdmin)){
 			response.sendRedirect(contexto+"/dash/index");
 			return ;
 		}
 		if(authorities.contains(permissaoUsuario)){
 			response.sendRedirect(contexto+"/");
+			return ;
+		}
+		
+		if(authorities.contains(permissaoDiretor) || authorities.contains(permissaoDev) || authorities.contains(permissaoDeus)){
+			response.sendRedirect(contexto+"/funcionarios/index");
 			return ;
 		}
 		System.out.println("nao caiu em nenhum");

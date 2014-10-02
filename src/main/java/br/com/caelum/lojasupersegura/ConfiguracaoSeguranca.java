@@ -54,10 +54,15 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 		AccessDeniedHandler accessDeniedHandler = new CustomAccessDeniedHandler();
 		// a configuração tem que ser toda junta, para ele mexer no mesmo
 		// objeto.
-		http.authorizeRequests().antMatchers("/").permitAll()
-				.antMatchers("/dash/**").hasRole("ADMIN")
+		http.authorizeRequests()
+				.antMatchers("/")
+				.permitAll()
+				.antMatchers("/dash/**")
+				.hasRole("ADMIN")
 				.antMatchers("/carrinho/index")
 				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+				.antMatchers("/funcionarios/**")
+				.access("hasRole('ROLE_DEV') or hasRole('ROLE_DEUS') or hasRole('ROLE_DIRETOR')")
 				.anyRequest().authenticated().and().formLogin()
 				.loginPage("/login").permitAll()
 				.successHandler(postAuthHandler)
@@ -88,9 +93,9 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth)
 			throws Exception {
-//		auth.userDetailsService(users).passwordEncoder(
-//				new BCryptPasswordEncoder(16));
-		for(AuthenticationProvider provider : authenticationProviders){
+		// auth.userDetailsService(users).passwordEncoder(
+		// new BCryptPasswordEncoder(16));
+		for (AuthenticationProvider provider : authenticationProviders) {
 			System.out.println("adicionando o provider");
 			auth.authenticationProvider(provider);
 		}

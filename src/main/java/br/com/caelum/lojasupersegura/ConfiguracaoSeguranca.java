@@ -7,13 +7,13 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -28,6 +28,7 @@ import br.com.caelum.lojasupersegura.handlers.CustomSuccessHandler;
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = { "br.com.caelum.lojasupersegura" })
+@Order(0)
 public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 	/*
 	 * GET /login renders the login page instead of /spring_security_login
@@ -54,15 +55,10 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 		AccessDeniedHandler accessDeniedHandler = new CustomAccessDeniedHandler();
 		// a configuração tem que ser toda junta, para ele mexer no mesmo
 		// objeto.
-		http.authorizeRequests()
-				.antMatchers("/")
-				.permitAll()
-				.antMatchers("/dash/**")
-				.hasRole("ADMIN")
+		http.authorizeRequests().antMatchers("/").permitAll()
+				.antMatchers("/dash/**").hasRole("ADMIN")
 				.antMatchers("/carrinho/index")
 				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-				.antMatchers("/funcionarios/**")
-				.access("hasRole('ROLE_DEV') or hasRole('ROLE_DEUS') or hasRole('ROLE_DIRETOR')")
 				.anyRequest().authenticated().and().formLogin()
 				.loginPage("/login").permitAll()
 				.successHandler(postAuthHandler)
@@ -96,16 +92,9 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 		// auth.userDetailsService(users).passwordEncoder(
 		// new BCryptPasswordEncoder(16));
 		for (AuthenticationProvider provider : authenticationProviders) {
-			System.out.println("adicionando o provider");
 			auth.authenticationProvider(provider);
 		}
 		// super.configure(auth);
-	}
-
-	public static void main(String[] args) {
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
-		String result = encoder.encode("password");
-		System.out.println(result);
 	}
 
 }

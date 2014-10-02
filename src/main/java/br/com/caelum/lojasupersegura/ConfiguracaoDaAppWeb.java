@@ -8,7 +8,7 @@ public class ConfiguracaoDaAppWeb extends AbstractAnnotationConfigDispatcherServ
 	
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { ConfiguracaoSeguranca.class,ConfiguracaoJPA.class };
+		return new Class[] { ConfiguracaoSeguranca.class,ConfiguracaoJPA.class,ConfiguracaoSegurancaFuncionario.class };
 	}
 
 	@Override

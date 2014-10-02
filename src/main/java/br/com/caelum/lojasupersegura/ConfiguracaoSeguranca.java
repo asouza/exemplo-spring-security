@@ -1,9 +1,11 @@
 package br.com.caelum.lojasupersegura;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import br.com.caelum.lojasupersegura.handlers.CustomAccessDeniedHandler;
@@ -59,18 +63,32 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout22"))
 				.logoutSuccessHandler(logoutSuccessHandler).and()
 				.exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-				.and().rememberMe().tokenValiditySeconds(60);
+				.and().rememberMe()
+				.tokenRepository(persistentTokenRepository())
+				.tokenValiditySeconds(60);
 
 	}
 
 	@Autowired
+	private DataSource datasource;
+
+	private PersistentTokenRepository persistentTokenRepository() {
+		JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+		tokenRepository.setDataSource(datasource);
+		return tokenRepository;
+	}
+
+	@Autowired
 	private UserDetailsService users;
+	@Autowired
+	private AuthenticationProvider authenticationProvider;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth)
 			throws Exception {
-		auth.userDetailsService(users).passwordEncoder(
-				new BCryptPasswordEncoder(16));
+//		auth.userDetailsService(users).passwordEncoder(
+//				new BCryptPasswordEncoder(16));
+		auth.authenticationProvider(authenticationProvider);
 		// super.configure(auth);
 	}
 

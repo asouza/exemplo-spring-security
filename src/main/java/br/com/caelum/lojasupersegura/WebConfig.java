@@ -19,4 +19,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	  resolver.setSuffix(".jsp");	 
 	  return resolver;
 	}
+	
+	
 }

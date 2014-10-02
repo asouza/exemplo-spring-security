@@ -17,6 +17,11 @@
 				<td>Password:</td>
 				<td><input type='password' name='password' /></td>
 			</tr>
+			
+			<tr>
+				<td>Estado:</td>
+				<td><input type='text' name='unidade' /></td>
+			</tr>
 			<tr>
 				<td>Remember me</td>
 				<td><input type="checkbox" name="remember-me" /></td>

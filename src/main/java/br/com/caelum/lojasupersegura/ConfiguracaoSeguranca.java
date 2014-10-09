@@ -1,5 +1,6 @@
 package br.com.caelum.lojasupersegura;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -8,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
@@ -24,6 +31,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import br.com.caelum.lojasupersegura.handlers.CustomAccessDeniedHandler;
 import br.com.caelum.lojasupersegura.handlers.CustomLogoutSuccessHandler;
 import br.com.caelum.lojasupersegura.handlers.CustomSuccessHandler;
+import br.com.caelum.lojasupersegura.voters.CustomDecisionVoter;
 
 @Configuration
 @EnableWebSecurity
@@ -55,7 +63,15 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 		AccessDeniedHandler accessDeniedHandler = new CustomAccessDeniedHandler();
 		// a configuração tem que ser toda junta, para ele mexer no mesmo
 		// objeto.
-		http.authorizeRequests().antMatchers("/").permitAll()
+        List<AccessDecisionVoter> decisionVoters = new ArrayList<AccessDecisionVoter>();
+        decisionVoters.add(new RoleVoter());
+        decisionVoters.add(new AuthenticatedVoter());
+        decisionVoters.add(new WebExpressionVoter());
+        decisionVoters.add(new CustomDecisionVoter());        
+        AffirmativeBased affirmativeBased = new AffirmativeBased(decisionVoters);
+        
+        
+		http.authorizeRequests().accessDecisionManager(affirmativeBased).antMatchers("/").permitAll()
 				.antMatchers("/dash/**").hasRole("ADMIN")
 				.antMatchers("/carrinho/index")
 				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")

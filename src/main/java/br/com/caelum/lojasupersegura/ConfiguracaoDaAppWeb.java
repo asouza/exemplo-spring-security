@@ -14,7 +14,7 @@ public class ConfiguracaoDaAppWeb extends AbstractAnnotationConfigDispatcherServ
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 		// TODO Auto-generated method stub
-		return new Class[]{WebInitializer.class,WebConfig.class};
+		return new Class[]{DisponibilizaRequestListener.class,WebConfig.class};
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.request.RequestContextListener;
 
 @Configuration
-public class WebInitializer implements WebApplicationInitializer {
+public class DisponibilizaRequestListener implements WebApplicationInitializer {
 
 	@Override
 	public void onStartup(ServletContext servletContext)

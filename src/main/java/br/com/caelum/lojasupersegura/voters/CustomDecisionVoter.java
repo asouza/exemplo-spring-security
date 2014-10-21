@@ -32,7 +32,7 @@ public class CustomDecisionVoter implements AccessDecisionVoter {
 			Collection attributes) {
 		// TODO Auto-generated method stub
 		FilterInvocation filterInvocation = (FilterInvocation) object;
-		User user = (User) authentication.getPrincipal();
+		//User user = (User) authentication.getPrincipal();
 		return ACCESS_GRANTED;
 	}
 

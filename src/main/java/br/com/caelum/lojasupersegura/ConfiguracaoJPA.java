@@ -37,7 +37,7 @@ public class ConfiguracaoJPA {
 	   public DataSource dataSource(){
 	      DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	      dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-	      dataSource.setUrl("jdbc:mysql://localhost:3306/loja_super_segura");
+	      dataSource.setUrl("jdbc:mysql://localhost:3306/loja_segura");
 	      dataSource.setUsername( "root" );
 	      dataSource.setPassword( "" );
 	      return dataSource;

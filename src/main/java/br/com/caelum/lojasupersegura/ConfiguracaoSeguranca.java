@@ -72,6 +72,7 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
         
         
 		http.authorizeRequests().accessDecisionManager(affirmativeBased).antMatchers("/").permitAll()
+				.antMatchers("/produtos/**").permitAll()
 				.antMatchers("/dash/**").hasRole("ADMIN")
 				.antMatchers("/carrinho/index")
 				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")

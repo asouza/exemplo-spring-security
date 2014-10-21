@@ -19,6 +19,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 			HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException,
 			ServletException {
+		System.out.println(accessDeniedException.getMessage());
 		response.sendRedirect(Contexto.urlContextualizada("403.jsp"));
 	}
 

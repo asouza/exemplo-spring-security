@@ -50,4 +50,9 @@ public class DatabaseAuthenticationProvider implements AuthenticationProvider{
 		return StringUtils.isEmpty(request.getParameter("funcionario"));
 	}
 
+	public static void main(String[] args) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+		System.out.println(encoder.encode("password"));
+		
+	}
 }

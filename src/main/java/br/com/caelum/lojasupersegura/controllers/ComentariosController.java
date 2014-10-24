@@ -28,8 +28,6 @@ public class ComentariosController {
 	
 	@Autowired
 	private ComentarioDAO comentarios;
-	@Autowired
-	private MutableAclService mutableAclService;
 
 	@RequestMapping(method=RequestMethod.POST)
 	@Transactional
@@ -49,15 +47,17 @@ public class ComentariosController {
 		Acl acl = mutableAclService.readAclById(oi);
 	}
 
-
+	@Autowired
+	private MutableAclService mutableAclService;
 	
 	private Acl criaPermissoesParaODono(Comentario comentario) {
 		// Create an ACL identity for this element
         ObjectIdentity identity = new ObjectIdentityImpl(comentario);
         MutableAcl acl = mutableAclService.createAcl(identity);
 
-        acl.insertAce(acl.getEntries().size(), BasePermission.DELETE, new PrincipalSid(SecurityContextHolder.getContext().getAuthentication()), true);
-        acl.insertAce(acl.getEntries().size(), BasePermission.ADMINISTRATION, new PrincipalSid(SecurityContextHolder.getContext().getAuthentication()), true);
+        PrincipalSid principalSid = new PrincipalSid(SecurityContextHolder.getContext().getAuthentication());
+		acl.insertAce(acl.getEntries().size(), BasePermission.DELETE, principalSid, true);
+        acl.insertAce(acl.getEntries().size(), BasePermission.ADMINISTRATION, principalSid, true);
         mutableAclService.updateAcl(acl);	
         return acl;
 	}

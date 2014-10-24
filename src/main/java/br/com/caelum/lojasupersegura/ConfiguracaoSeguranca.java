@@ -116,5 +116,6 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 		}
 		// super.configure(auth);
 	}
+		
 
 }

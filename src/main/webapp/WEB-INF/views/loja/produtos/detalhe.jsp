@@ -13,7 +13,9 @@
 <div class="comentarios">
 	<c:forEach var="comentario" items="${produto.comentarios}">
 		<div class="comentario" style="border:dotted;margin:5px">
-			<p><a href="/loja-super-segura/comentarios/remove/${produto.id}/comentario/${comentario.id}">${comentario.texto}</a></p>
+			<sec:accesscontrollist hasPermission="delete" domainObject="${comentario}">
+				<p><a href="/loja-super-segura/comentarios/remove/${produto.id}/comentario/${comentario.id}">${comentario.texto}</a></p>
+			</sec:accesscontrollist>
 			<span>${comentario.criador.name}</span>
 		</div>
 	</c:forEach>

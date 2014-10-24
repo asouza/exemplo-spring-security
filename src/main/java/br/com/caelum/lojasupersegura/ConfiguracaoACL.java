@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.acls.AclPermissionEvaluator;
 import org.springframework.security.acls.domain.AclAuthorizationStrategy;
 import org.springframework.security.acls.domain.AclAuthorizationStrategyImpl;
 import org.springframework.security.acls.domain.ConsoleAuditLogger;
@@ -82,4 +86,18 @@ public class ConfiguracaoACL {
 		service.setSidIdentityQuery("select last_insert_id()");
 		return service;	
 	}
+	
+	@Bean
+	public MethodSecurityExpressionHandler expressionHandler(PermissionEvaluator permissionEvaluator){				
+		DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
+		handler.setPermissionEvaluator(permissionEvaluator);
+		return handler;
+	}
+	
+	@Bean
+	public PermissionEvaluator permissionEvaluator(MutableAclService aclService){
+		AclPermissionEvaluator aclPermissionEvaluator = new AclPermissionEvaluator(aclService);
+		return aclPermissionEvaluator;
+	}
+	
 }
